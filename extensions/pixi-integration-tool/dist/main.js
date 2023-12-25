@@ -19,11 +19,15 @@ exports.methods = {
  * @en Hooks triggered after extension loading is complete
  * @zh 扩展加载完成后触发的钩子
  */
-function load() { }
+function load() {
+    console.log('==== my tool loaded ====');
+}
 exports.load = load;
 /**
  * @en Hooks triggered after extension uninstallation is complete
  * @zh 扩展卸载完成后触发的钩子
  */
-function unload() { }
+function unload() {
+    console.log('==== my tool unloaded ====');
+}
 exports.unload = unload;

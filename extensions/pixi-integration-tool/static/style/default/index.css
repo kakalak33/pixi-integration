@@ -3,6 +3,22 @@
     margin: auto;
     width: 180px;
 }
+
 .counter {
     text-align: center;
+}
+
+ui-file {
+    width: 100%;
+}
+
+#app {
+    max-width: 400px;
+    margin: 3px auto 3px auto;
+    padding: 3px;
+}
+
+ui-button {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

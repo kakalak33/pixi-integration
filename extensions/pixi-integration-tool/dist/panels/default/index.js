@@ -18,47 +18,46 @@ module.exports = Editor.Panel.define({
     style: (0, fs_extra_1.readFileSync)((0, path_1.join)(__dirname, '../../../static/style/default/index.css'), 'utf-8'),
     $: {
         app: '#app',
-        text: '#text',
     },
-    methods: {
-        hello() {
-            if (this.$.text) {
-                this.$.text.innerHTML = 'hello';
-                console.log('[cocos-panel-html.default]: hello');
-            }
-        },
-    },
+    methods: {},
     ready() {
-        if (this.$.text) {
-            this.$.text.innerHTML = 'Hello Cocos.';
-        }
         if (this.$.app) {
-            const app = (0, vue_1.createApp)({});
-            app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ui-');
-            app.component('MyCounter', {
-                template: (0, fs_extra_1.readFileSync)((0, path_1.join)(__dirname, '../../../static/template/vue/counter.html'), 'utf-8'),
+            const app = (0, vue_1.createApp)({
                 data() {
                     return {
-                        counter: 0,
+                        sceneDir: "/Users/fe-tu/Desktop/Personal/Cocos/pixi-integration/assets/scene/home.scene",
                     };
-                }, methods: {
-                    addition() {
-                        this.counter += 1;
-                    },
-                    subtraction() {
-                        this.counter -= 1;
-                    },
                 },
+                methods: {
+                    onConfirm() {
+                        console.log('==== Start reading scene ====');
+                        if (!this.sceneDir)
+                            return console.log('==== Scene directory is empty ====');
+                        const contentArr = getSceneArray(this.sceneDir);
+                        const nodesArr = getNodesFromScene(contentArr);
+                        console.log(nodesArr);
+                    },
+                    handleFileDirectory(e) {
+                        if (e.target.value) {
+                            this.sceneDir = e.target.value;
+                        }
+                    },
+                }
             });
+            app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ui-');
             app.mount(this.$.app);
             panelDataMap.set(this, app);
         }
     },
-    beforeClose() { },
-    close() {
-        const app = panelDataMap.get(this);
-        if (app) {
-            app.unmount();
-        }
-    },
 });
+function getSceneArray(filePath) {
+    const fileContent = (0, fs_extra_1.readFileSync)(filePath, 'utf-8');
+    const fileContentArray = Array.from(JSON.parse(fileContent));
+    return fileContentArray;
+}
+function getNodesFromScene(sceneArray) {
+    const nodesArray = sceneArray.filter((sceneObj) => {
+        return sceneObj.__type__ === 'cc.Node';
+    });
+    return nodesArray || [];
+}

@@ -15,7 +15,7 @@
     },
     "panels": {
         "default": {
-            "title": "pixi-integration-tool Default Panel",
+            "title": "pixi-integration-tool",
             "type": "dockable",
             "main": "dist/panels/default",
             "size": {

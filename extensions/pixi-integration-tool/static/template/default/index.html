@@ -1,6 +1,7 @@
 <div>
     <div id="app">
-        <my-counter></my-counter>
+        <span>Scene: </span> <ui-file @confirm="handleFileDirectory" @change="handleFileDirectory" type="file"
+            value=/Users/fe-tu/Desktop/Personal/Cocos/pixi-integration/assets/scene/home.scene></ui-file>
+        <ui-button @confirm="onConfirm">Confirm</ui-button>
     </div>
-    <h1 id="text"></h1>
 </div>

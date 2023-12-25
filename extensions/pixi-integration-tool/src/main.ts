@@ -14,10 +14,14 @@ export const methods: { [key: string]: (...any: any) => any } = {
  * @en Hooks triggered after extension loading is complete
  * @zh 扩展加载完成后触发的钩子
  */
-export function load() { }
+export function load() {
+    console.log('==== my tool loaded ====');
+}
 
 /**
  * @en Hooks triggered after extension uninstallation is complete
  * @zh 扩展卸载完成后触发的钩子
  */
-export function unload() { }
+export function unload() {
+    console.log('==== my tool unloaded ====');
+}

@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs-extra';
+import { PathOrFileDescriptor, outputJSONSync, readFileSync, readJsonSync } from 'fs-extra';
 import { join } from 'path';
 import { createApp, App } from 'vue';
 const panelDataMap = new WeakMap<any, App>();
@@ -16,47 +16,64 @@ module.exports = Editor.Panel.define({
     style: readFileSync(join(__dirname, '../../../static/style/default/index.css'), 'utf-8'),
     $: {
         app: '#app',
-        text: '#text',
     },
-    methods: {
-        hello() {
-            if (this.$.text) {
-                this.$.text.innerHTML = 'hello';
-                console.log('[cocos-panel-html.default]: hello');
-            }
-        },
-    },
+    methods: {},
     ready() {
-        if (this.$.text) {
-            this.$.text.innerHTML = 'Hello Cocos.';
-        }
         if (this.$.app) {
-            const app = createApp({});
-            app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ui-');
-            app.component('MyCounter', {
-                template: readFileSync(join(__dirname, '../../../static/template/vue/counter.html'), 'utf-8'),
+            const app = createApp({
                 data() {
                     return {
-                        counter: 0,
+                        sceneDir: "/Users/fe-tu/Desktop/Personal/Cocos/pixi-integration/assets/scene/home.scene",
                     };
-                }, methods: {
-                    addition() {
-                        this.counter += 1;
-                    },
-                    subtraction() {
-                        this.counter -= 1;
-                    },
                 },
+                methods: {
+                    onConfirm() {
+                        console.log('==== Start reading scene ====');
+                        if (!this.sceneDir) return console.log('==== Scene directory is empty ====');
+
+                        const contentArr: Array<SceneObject> = getSceneArray(this.sceneDir);
+
+                        const nodesArr = getNodesFromScene(contentArr);
+
+                        console.log(nodesArr);
+                    },
+                    handleFileDirectory(e: any) {
+                        if (e.target.value) {
+                            this.sceneDir = e.target.value;
+                        }
+                    },
+                }
             });
+            app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ui-');
             app.mount(this.$.app);
             panelDataMap.set(this, app);
         }
     },
-    beforeClose() { },
-    close() {
-        const app = panelDataMap.get(this);
-        if (app) {
-            app.unmount();
-        }
-    },
 });
+
+interface SceneObject {
+    __type__: String,
+    _active: Boolean,
+    _children: Array<any>,
+    _components: Array<{ id: number }>,
+    _name: String,
+    _parent: Array<{ id: number }>,
+    /*
+    _lpos: {__type__: "cc.Vec3", x: 5, y: -78, z: 0}
+    _lrot: {__type__: "cc.Quat", x: 0, y: 0, z: 0, w: 1}
+    _lscale: {__type__: "cc.Vec3", x: 1, y: 1, z: 1}
+    */
+}
+
+function getSceneArray(filePath: PathOrFileDescriptor): Array<SceneObject> {
+    const fileContent = readFileSync(filePath, 'utf-8');
+    const fileContentArray: Array<SceneObject> = Array.from(JSON.parse(fileContent));
+    return fileContentArray;
+}
+
+function getNodesFromScene(sceneArray: Array<SceneObject>) {
+    const nodesArray = sceneArray.filter((sceneObj: SceneObject) => {
+        return sceneObj.__type__ === 'cc.Node';
+    });
+    return nodesArray || [];
+}
