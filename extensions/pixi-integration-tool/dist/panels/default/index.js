@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = require("child_process");
 const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const vue_1 = require("vue");
@@ -33,7 +32,6 @@ module.exports = Editor.Panel.define({
                 },
                 methods: {
                     onConfirm() {
-                        (0, child_process_1.exec)('npm run test');
                         console.log('==== Start reading scene ====');
                         if (!this.sceneDir)
                             return console.log('==== Scene directory is empty ====');

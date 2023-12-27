@@ -31,7 +31,6 @@ module.exports = Editor.Panel.define({
                 },
                 methods: {
                     onConfirm() {
-                        exec('npm run test');
                         console.log('==== Start reading scene ====');
                         if (!this.sceneDir) return console.log('==== Scene directory is empty ====');
                         const sceneObjArr: Array<SceneObject> = getSceneArray(this.sceneDir);
